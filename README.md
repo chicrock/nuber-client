@@ -9,3 +9,9 @@ Client for the Uber Clone. ReactJS, Apollo, Typescript
 ```bash
 create-react-app nuber-client --scripts-version=react-scripts-ts
 ```
+
+### apollo-boost
+
+```bash
+yarn add apollo-boost graphql react-apollo
+```
