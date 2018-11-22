@@ -15,3 +15,9 @@ create-react-app nuber-client --scripts-version=react-scripts-ts
 ```bash
 yarn add apollo-boost graphql react-apollo
 ```
+
+### prop-types
+
+```bash
+yarn add prop-types
+```
