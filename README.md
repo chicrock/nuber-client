@@ -21,3 +21,16 @@ yarn add apollo-boost graphql react-apollo
 ```bash
 yarn add prop-types
 ```
+
+### styled-components
+
+```bash
+yarn add styled-components
+yarn add --dev @types/styled-components
+```
+
+### styled-reset
+
+```bash
+yarn add styled-reset
+```
