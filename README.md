@@ -35,6 +35,13 @@ yarn add --dev @types/styled-components
 yarn add styled-reset
 ```
 
+### react-router-dom
+
+```bash
+yarn add react-router-dom
+yarn add --dev @types/react-router-dom
+```
+
 ## Screens
 
 ### Logged Out
@@ -52,4 +59,5 @@ yarn add styled-reset
     - [ ] Settings
     - [ ] Saved Places
     - [ ] Add Place
+    - [ ] Find Address
     - [ ] Challenge: Ride History
