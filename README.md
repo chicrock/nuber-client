@@ -34,3 +34,7 @@ yarn add --dev @types/styled-components
 ```bash
 yarn add styled-reset
 ```
+
+## Screens:
+
+    - [ ]
