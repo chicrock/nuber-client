@@ -42,6 +42,13 @@ yarn add react-router-dom
 yarn add --dev @types/react-router-dom
 ```
 
+### react-helmet
+
+```bash
+yarn add react-helmet
+yarn add --dev @types/react-helmet
+```
+
 ## Screens
 
 ### Logged Out
