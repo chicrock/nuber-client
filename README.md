@@ -68,3 +68,22 @@ yarn add --dev @types/react-helmet
     - [ ] Add Place
     - [ ] Find Address
     - [ ] Challenge: Ride History
+
+## Resource
+
+### iconmoster
+
+- Can Get the free icons from [Iconmonstr](https://iconmonstr.com/)
+- And Use like this with svg
+
+```javascript
+<svg
+  width="24"
+  height="24"
+  xmlns="http://www.w3.org/2000/svg"
+  fill-rule="evenodd"
+  clip-rule="evenodd"
+>
+  <path d="M20 .755l-14.374 11.245 14.374 11.219-.619.781-15.381-12 15.391-12 .609.755z" />
+</svg>
+```
