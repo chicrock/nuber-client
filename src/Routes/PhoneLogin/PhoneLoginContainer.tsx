@@ -1,7 +1,9 @@
 import React from "react";
+import { Mutation } from "react-apollo";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import PhoneLoginPresenter from "./PhoneLoginPresenter";
+import { PHONE_SIGN_IN } from "./PhoneQueries";
 
 interface IProps extends RouteComponentProps<any> {}
 
@@ -9,6 +11,12 @@ interface IState {
   countryCode: string;
   phoneNumber: string;
 }
+
+interface IMutationInterface {
+  phoneNumber: string;
+}
+
+class PhoneSignInMutation extends Mutation<any, IMutationInterface> {}
 
 class PhoneLoginContainer extends React.Component<IProps, IState> {
   public state = {
@@ -18,13 +26,43 @@ class PhoneLoginContainer extends React.Component<IProps, IState> {
 
   public render() {
     const { countryCode, phoneNumber } = this.state;
+    const fullNumber = `${countryCode}${phoneNumber}`;
+
     return (
-      <PhoneLoginPresenter
-        countryCode={countryCode}
-        phoneNumber={phoneNumber}
-        onInputChange={this.onInputChange}
-        onSubmit={this.onSubmit}
-      />
+      <PhoneSignInMutation
+        mutation={PHONE_SIGN_IN}
+        variables={{
+          phoneNumber: fullNumber,
+        }}
+      >
+        {(mutation, { loading }) => {
+          const onSubmit: React.FormEventHandler<HTMLFormElement> = event => {
+            event.preventDefault();
+
+            const isValid = /^\+[0-9]{1,4}[0-9]{7,11}$/.test(fullNumber);
+            const phoneNumberValid = /^[0-9]{9,11}$/.test(phoneNumber);
+
+            // tslint:disable-next-line
+            // console.log(countryCode, phoneNumber);
+
+            if (isValid && phoneNumberValid) {
+              mutation();
+            } else {
+              toast.error("Please write a valid phone number");
+            }
+          };
+
+          return (
+            <PhoneLoginPresenter
+              countryCode={countryCode}
+              phoneNumber={phoneNumber}
+              onInputChange={this.onInputChange}
+              onSubmit={onSubmit}
+              loading={loading}
+            />
+          );
+        }}
+      </PhoneSignInMutation>
     );
   }
 
@@ -38,25 +76,6 @@ class PhoneLoginContainer extends React.Component<IProps, IState> {
     this.setState({
       [name]: value,
     } as any);
-  };
-
-  public onSubmit: React.FormEventHandler<HTMLFormElement> = event => {
-    event.preventDefault();
-
-    const { countryCode, phoneNumber } = this.state;
-    const fullNumber = `${countryCode}${phoneNumber}`;
-
-    const isValid = /^\+[0-9]{1,4}[0-9]{7,11}$/.test(fullNumber);
-    const phoneNumberValid = /^[0-9]{9,11}$/.test(phoneNumber);
-
-    // tslint:disable-next-line
-    // console.log(countryCode, phoneNumber);
-
-    if (isValid && phoneNumberValid) {
-      return;
-    } else {
-      toast.error("Please write a valid phone number");
-    }
   };
 }
 export default PhoneLoginContainer;
