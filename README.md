@@ -49,6 +49,12 @@ yarn add react-helmet
 yarn add --dev @types/react-helmet
 ```
 
+### react-toastify
+
+```bash
+yarn add react-toastify
+```
+
 ## Screens
 
 ### Logged Out
@@ -71,7 +77,7 @@ yarn add --dev @types/react-helmet
 
 ## Resource
 
-### iconmoster
+### iconmomster
 
 - Can Get the free icons from [Iconmonstr](https://iconmonstr.com/)
 - And Use like this with svg
