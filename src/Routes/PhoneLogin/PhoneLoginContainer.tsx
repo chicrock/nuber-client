@@ -2,6 +2,7 @@ import React from "react";
 import { Mutation } from "react-apollo";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
+import routes from "../../routes";
 import {
   startPhoneVerification,
   startPhoneVerificationVariables,
@@ -28,20 +29,30 @@ class PhoneLoginContainer extends React.Component<IProps, IState> {
   };
 
   public render() {
+    const { history } = this.props;
     const { countryCode, phoneNumber } = this.state;
-    const fullNumber = `${countryCode}${phoneNumber}`;
+    const phone = `${countryCode}${phoneNumber}`;
 
     return (
       <PhoneSignInMutation
         mutation={PHONE_SIGN_IN}
         variables={{
-          phoneNumber: fullNumber,
+          phoneNumber: phone,
         }}
         onCompleted={(data: startPhoneVerification) => {
           const { StartPhoneVerification } = data;
 
           if (StartPhoneVerification.ok) {
-            return;
+            toast.success("SMS Sent! Redirecting you...");
+
+            setTimeout(() => {
+              history.push({
+                pathname: routes.verifyPhone,
+                state: {
+                  phone,
+                },
+              });
+            }, 2000);
           } else {
             toast.error(StartPhoneVerification.error);
           }
@@ -51,7 +62,7 @@ class PhoneLoginContainer extends React.Component<IProps, IState> {
           const onSubmit: React.FormEventHandler<HTMLFormElement> = event => {
             event.preventDefault();
 
-            const isValid = /^\+[0-9]{1,4}[0-9]{7,11}$/.test(fullNumber);
+            const isValid = /^\+[0-9]{1,4}[0-9]{7,11}$/.test(phone);
             const phoneNumberValid = /^[0-9]{9,11}$/.test(phoneNumber);
 
             // tslint:disable-next-line

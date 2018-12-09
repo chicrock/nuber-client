@@ -1,5 +1,2 @@
-import React from "react";
-
-const R = () => <span>tmp</span>;
-
-export default R;
+import VerifyPhoneContainer from "./VerifyPhoneContainer";
+export default VerifyPhoneContainer;
