@@ -55,6 +55,12 @@ yarn add --dev @types/react-helmet
 yarn add react-toastify
 ```
 
+### apollo for codegen
+
+```bash
+yarn global add apollo
+```
+
 ## Screens
 
 ### Logged Out
@@ -92,4 +98,27 @@ yarn add react-toastify
 >
   <path d="M20 .755l-14.374 11.245 14.374 11.219-.619.781-15.381-12 15.391-12 .609.755z" />
 </svg>
+```
+
+## Apollo Codegen
+
+### Install
+
+```bash
+yarn global add apollo
+```
+
+### Setup
+
+- Add below scripts on pacakage.json
+
+```json
+"precodegen": "apollo schema:download --endpoint=http://localhost:4000/graphql",
+"codegen": "apollo codegen:generate src/types/api.d.ts --queries='src/**/*.queries.ts' --addTypename --localSchemaFile schema.json --target typescript --outputFlat"
+```
+
+### Generate types
+
+```bash
+yarn run codegen
 ```
