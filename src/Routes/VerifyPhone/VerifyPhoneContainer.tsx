@@ -1,7 +1,8 @@
 import React from "react";
-import { Mutation } from "react-apollo";
+import { graphql, Mutation, MutationFn } from "react-apollo";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
+import { LOG_USER_IN } from "../../sharedQueries";
 import { verifyPhone, verifyPhoneVariables } from "../../types/api";
 import VerifyPhonePresenter from "./VerifyPhonePresenter";
 import { VERIFY_PHONE } from "./VerifyPhoneQueries";
@@ -11,7 +12,9 @@ interface IState {
   phoneNumber: string;
 }
 
-interface IProps extends RouteComponentProps<any> {}
+interface IProps extends RouteComponentProps<any> {
+  logUserIn: MutationFn;
+}
 
 class VerifyMutation extends Mutation<verifyPhone, verifyPhoneVariables> {}
 
@@ -30,6 +33,7 @@ class VerifyPhoneContainer extends React.Component<IProps, IState> {
 
   public render() {
     const { verificationKey, phoneNumber } = this.state;
+    const { logUserIn } = this.props;
     return (
       <VerifyMutation
         mutation={VERIFY_PHONE}
@@ -39,9 +43,15 @@ class VerifyPhoneContainer extends React.Component<IProps, IState> {
         }}
         onCompleted={data => {
           const { CompletePhoneVerification } = data;
-
           if (CompletePhoneVerification.ok) {
-            toast.success("You're verified, loggin in now");
+            if (CompletePhoneVerification.token) {
+              logUserIn({
+                variables: {
+                  token: CompletePhoneVerification.token,
+                },
+              });
+              toast.success("You're verified, loggin in now");
+            }
           } else {
             toast.error(CompletePhoneVerification.error);
           }
@@ -71,4 +81,7 @@ class VerifyPhoneContainer extends React.Component<IProps, IState> {
     } as any);
   };
 }
-export default VerifyPhoneContainer;
+
+export default graphql<any, any>(LOG_USER_IN, {
+  name: "logUserIn",
+})(VerifyPhoneContainer);

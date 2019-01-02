@@ -9,7 +9,7 @@ const client = new ApolloClient({
       },
     },
     resolvers: {
-      Mutaion: {
+      Mutation: {
         logUserIn: (_, { token }, { cache }) => {
           localStorage.setItem("jwt", token);
           cache.writeData({
@@ -27,8 +27,7 @@ const client = new ApolloClient({
           localStorage.removeItem("jwt");
           cache.writeData({
             data: {
-              __typename: "Auth",
-              isLoggedIn: false,
+              auth: { __typename: "Auth", isLoggedIn: false },
             },
           });
           return null;
