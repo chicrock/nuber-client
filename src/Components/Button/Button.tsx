@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "../../typed-components";
+
 const Container = styled.input`
   width: 100%;
   background-color: black;
@@ -17,14 +18,30 @@ const Container = styled.input`
   }
   &:disabled {
     opacity: 0.8;
+    cursor: not-allowed;
   }
 `;
+
 interface IProps {
   value: string;
   onClick: any;
   disabled?: boolean;
+  className?: string;
 }
-const Button: React.SFC<IProps> = ({ value, onClick, disabled = false }) => (
-  <Container value={value} disabled={disabled} onClick={onClick} />
+
+const Button: React.SFC<IProps> = ({
+  value,
+  onClick,
+  disabled = false,
+  className,
+}) => (
+  <Container
+    value={value}
+    onClick={onClick}
+    disabled={disabled}
+    className={className}
+    type={"submit"}
+  />
 );
+
 export default Button;

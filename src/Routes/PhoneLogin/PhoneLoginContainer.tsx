@@ -8,7 +8,7 @@ import {
   startPhoneVerificationVariables,
 } from "../../types/api";
 import PhoneLoginPresenter from "./PhoneLoginPresenter";
-import { PHONE_SIGN_IN } from "./PhoneQueries.queries";
+import { PHONE_SIGN_IN } from "./PhoneQueries";
 
 interface IProps extends RouteComponentProps<any> {}
 

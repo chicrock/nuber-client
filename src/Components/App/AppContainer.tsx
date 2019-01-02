@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import theme from "src/theme";
 import { ThemeProvider } from "src/typed-components";
 import AppPresenter from "./AppPresenter";
-import { IS_LOGGED_IN } from "./AppQueries";
+import { IS_LOGGED_IN } from "./AppQueries.local";
 
 // tslint:disable-next-line
 
