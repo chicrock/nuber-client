@@ -65,10 +65,10 @@ yarn global add apollo
 
 ### Logged Out
 
-    - [ ] Home
-    - [ ] Phone Login
-    - [ ] Verify Phone Number
-    - [ ] Social Login
+    - [x] Home
+    - [x] Phone Login
+    - [x] Verify Phone Number
+    - [x] Social Login
 
 ### Logged In
 
@@ -102,7 +102,7 @@ yarn global add apollo
 
 ## Apollo Codegen
 
-### Install
+### Codegen Install
 
 ```bash
 yarn global add apollo
@@ -122,3 +122,16 @@ yarn global add apollo
 ```bash
 yarn run codegen
 ```
+
+## Social login
+
+### Facebook Login Install
+
+```bash
+yarn add react-facebook-login
+```
+
+### GET App ID
+
+- [Facebook developer](https://developers.facebook.com)
+- Create App on facebook developer site
