@@ -34,14 +34,14 @@ export interface facebookConnect_FacebookConnect {
 }
 
 export interface facebookConnect {
-  FacebookConnect: facebookConnect_FacebookConnect | null;
+  FacebookConnect: facebookConnect_FacebookConnect;
 }
 
 export interface facebookConnectVariables {
-  firstName: string;
-  lastName: string;
   email?: string | null;
   fbId: string;
+  firstName: string;
+  lastName: string;
 }
 
 /* tslint:disable */

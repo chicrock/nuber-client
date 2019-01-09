@@ -40,16 +40,14 @@ class SocialLoginContainer extends React.Component<IProps, IState> {
             onCompleted={data => {
               const { FacebookConnect } = data;
 
-              if (FacebookConnect) {
-                if (FacebookConnect.ok) {
-                  logUserIn({
-                    variables: {
-                      token: FacebookConnect.token,
-                    },
-                  });
-                } else {
-                  toast.error(FacebookConnect.error);
-                }
+              if (FacebookConnect.ok) {
+                logUserIn({
+                  variables: {
+                    token: FacebookConnect.token,
+                  },
+                });
+              } else {
+                toast.error(FacebookConnect.error);
               }
             }}
           >
