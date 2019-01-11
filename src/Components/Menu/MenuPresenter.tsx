@@ -1,6 +1,7 @@
 import React from "react";
+import { MutationFn } from "react-apollo";
 import { Link } from "react-router-dom";
-import { userProfile } from "src/types/api";
+import { toggleDriving, userProfile } from "src/types/api";
 import noPhoto from "../../images/noPhoto.jpg";
 import styled from "../../typed-components";
 
@@ -79,11 +80,13 @@ const ToggleDriving = styled("button")<IToggleProps>`
 interface IProps {
   data?: userProfile;
   loading: boolean;
+  toggleDrivingFn: MutationFn<toggleDriving>;
 }
 
 const MenuPresenter: React.SFC<IProps> = ({
   data: { GetMyProfile: { user = null } = {} } = {},
   loading,
+  toggleDrivingFn,
 }) => (
   <Container>
     {!loading && user && user.fullName && (
@@ -101,7 +104,12 @@ const MenuPresenter: React.SFC<IProps> = ({
         </Header>
         <SLink to="/trips">Your Trips</SLink>
         <SLink to="/settings">Settings</SLink>
-        <ToggleDriving isDriving={user.isDriving}>
+        <ToggleDriving
+          onClick={() => {
+            toggleDrivingFn();
+          }}
+          isDriving={user.isDriving}
+        >
           {user.isDriving ? "Stop driving" : "Start driving"}
         </ToggleDriving>
       </React.Fragment>
