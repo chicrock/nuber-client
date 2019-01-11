@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { userProfile } from "src/types/api";
+import noPhoto from "../../images/noPhoto.jpg";
 import styled from "../../typed-components";
 
 const Container = styled.div`
@@ -74,26 +76,36 @@ const ToggleDriving = styled("button")<IToggleProps>`
   cursor: pointer;
 `;
 
-const MenuPresenter: React.SFC = () => (
+interface IProps {
+  data?: userProfile;
+  loading: boolean;
+}
+
+const MenuPresenter: React.SFC<IProps> = ({
+  data: { GetMyProfile: { user = null } = {} } = {},
+  loading,
+}) => (
   <Container>
-    <Header>
-      <Grid>
-        <Link to={"/edit-account"}>
-          <Image
-            src={"https://avatars2.githubusercontent.com/u/1574553?s=460&v=4"}
-          />
-        </Link>
-        <Text>
-          <Name>Chicrock</Name>
-          <Rating>4.5</Rating>
-        </Text>
-      </Grid>
-    </Header>
-    <SLink to="/trips">Your Trips</SLink>
-    <SLink to="/settings">Settings</SLink>
-    <ToggleDriving isDriving={false}>
-      {false ? "Stop driving" : "Start driving"}
-    </ToggleDriving>
+    {!loading && user && user.fullName && (
+      <React.Fragment>
+        <Header>
+          <Grid>
+            <Link to={"/edit-account"}>
+              <Image src={user.profilePhoto || noPhoto} />
+            </Link>
+            <Text>
+              <Name>{user.fullName}</Name>
+              <Rating>4.5</Rating>
+            </Text>
+          </Grid>
+        </Header>
+        <SLink to="/trips">Your Trips</SLink>
+        <SLink to="/settings">Settings</SLink>
+        <ToggleDriving isDriving={user.isDriving}>
+          {user.isDriving ? "Stop driving" : "Start driving"}
+        </ToggleDriving>
+      </React.Fragment>
+    )}
   </Container>
 );
 

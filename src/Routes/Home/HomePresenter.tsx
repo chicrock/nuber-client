@@ -7,11 +7,16 @@ import styled from "../../typed-components";
 const Container = styled.div``;
 
 interface IProps {
+  loading: boolean;
   isMenuOpen: boolean;
   toggleMenu: () => void;
 }
 
-const HomePresenter: React.SFC<IProps> = ({ isMenuOpen, toggleMenu }) => (
+const HomePresenter: React.SFC<IProps> = ({
+  isMenuOpen,
+  toggleMenu,
+  loading,
+}) => (
   <Container>
     <Helmet>
       <title>Home | Number</title>
@@ -24,7 +29,7 @@ const HomePresenter: React.SFC<IProps> = ({ isMenuOpen, toggleMenu }) => (
         sidebar: { width: "80%", backgroundColor: "white", zIndex: "10" },
       }}
     >
-      <button onClick={() => toggleMenu()}>Open sidebar</button>
+      {!loading && <button onClick={() => toggleMenu()}>Open sidebar</button>}
     </Sidebar>
   </Container>
 );
