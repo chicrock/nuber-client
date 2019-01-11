@@ -3,7 +3,9 @@ import { ThemedStyledComponentsModule } from "styled-components";
 
 interface IThemeInterface {
   blueColor: string;
+  greenColor: string;
   greyColor: string;
+  yellowColor: string;
 }
 
 const {
