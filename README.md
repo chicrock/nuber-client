@@ -61,6 +61,13 @@ yarn add react-toastify
 yarn global add apollo
 ```
 
+### react-sidebar
+
+```bash
+yarn add react-sidebar
+yarn add --dev @types/react-sidebar
+```
+
 ## Screens
 
 ### Logged Out
