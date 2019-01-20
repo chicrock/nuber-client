@@ -142,3 +142,31 @@ yarn add react-facebook-login
 
 - [Facebook developer](https://developers.facebook.com)
 - Create App on facebook developer site
+
+## Upload Image Files
+
+### Setup Cloudinary
+
+- Sign up
+- Add upload preset with Unsigned in Settings
+
+### Upload image with axios
+
+```bash
+yarn add axios
+```
+
+```javascript
+const formData = new FormData();
+formData.append("file", files[0]);
+formData.append("api_key", CLOUDINARY_KEY);
+formData.append("upload_preset", CLOUDINARY_PRESET);
+formData.append("timestamp", String(Date.now() / 1000));
+
+const {
+  data: { secure_url },
+} = await axios.post(
+  "https://api.cloudinary.com/v1_1/[cloudinary_user_name]/image/upload",
+  formData
+);
+```
