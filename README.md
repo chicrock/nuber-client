@@ -81,8 +81,8 @@ yarn add --dev @types/react-sidebar
 
     - [ ] Home
     - [ ] Ride
-    = [ ] Edit Account
-    - [ ] Settings
+    = [x] Edit Account
+    - [x] Settings
     - [ ] Saved Places
     - [ ] Add Place
     - [ ] Find Address
