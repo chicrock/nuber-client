@@ -1,5 +1,3 @@
-import React from "react";
+import PlacesContainer from "./PlacesContainer";
 
-const R = () => <span>tmp</span>;
-
-export default R;
+export default PlacesContainer;

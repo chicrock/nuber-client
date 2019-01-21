@@ -31,7 +31,7 @@ const VerifyPhonePresenter: React.SFC<IProps> = ({
 }) => (
   <Container>
     <Helmet>
-      <title>Verify Phone | Number</title>
+      <title>Verify Phone | Nuber</title>
     </Helmet>
     <Header backTo={"/phone-login"} title={"Verify Phone Number"} />
     <ExtendedForm submitFn={onSubmit}>

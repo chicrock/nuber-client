@@ -41,7 +41,7 @@ const EditAccountPresenter: React.SFC<IProps> = ({
 }) => (
   <Container>
     <Helmet>
-      <title>Edit Account | Number</title>
+      <title>Edit Account | Nuber</title>
     </Helmet>
     <Header title={"Edit Account"} backTo={"/"} />
     <ExtendedForm submitFn={onSubmit}>
