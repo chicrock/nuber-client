@@ -83,8 +83,8 @@ yarn add --dev @types/react-sidebar
     - [ ] Ride
     = [x] Edit Account
     - [x] Settings
-    - [ ] Saved Places
-    - [ ] Add Place
+    - [x] Saved Places
+    - [x] Add Place
     - [ ] Find Address
     - [ ] Challenge: Ride History
 

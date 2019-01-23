@@ -34,10 +34,11 @@ const PlacesPresenter: React.SFC<IProps> = ({
         places &&
         places.map(place => (
           <Place
-            key={place!.id}
-            fav={place!.isFav}
-            name={place!.name}
             address={place!.address}
+            fav={place!.isFav}
+            id={place!.id}
+            key={place!.id}
+            name={place!.name}
           />
         ))}
       <SLink to={"/add-place"}>Add some Places!</SLink>
