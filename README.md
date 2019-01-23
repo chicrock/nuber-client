@@ -68,6 +68,15 @@ yarn add react-sidebar
 yarn add --dev @types/react-sidebar
 ```
 
+### google maps
+
+```bash
+yarn add google-maps-react
+yarn add --dev @types/google-maps-react @types/googlemaps
+```
+
+- Get the Google Maps Javascript API key from [Google Console](https://console.cloud.google.com/)
+
 ## Screens
 
 ### Logged Out
