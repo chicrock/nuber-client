@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import React from "react";
 import { ApolloProvider } from "react-apollo";
 import ReactDOM from "react-dom";
