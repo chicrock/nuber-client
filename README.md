@@ -16,12 +16,6 @@ create-react-app nuber-client --scripts-version=react-scripts-ts
 yarn add apollo-boost graphql react-apollo
 ```
 
-### prop-types
-
-```bash
-yarn add prop-types
-```
-
 ### styled-components
 
 ```bash
@@ -73,6 +67,12 @@ yarn add --dev @types/react-sidebar
 ```bash
 yarn add google-maps-react
 yarn add --dev @types/google-maps-react @types/googlemaps
+```
+
+### dotenv
+
+```bash
+yarn add dotenv
 ```
 
 - Get the Google Maps Javascript API key from [Google Console](https://console.cloud.google.com/)

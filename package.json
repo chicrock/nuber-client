@@ -8,7 +8,6 @@
     "dotenv": "^6.2.0",
     "google-maps-react": "^2.0.2",
     "graphql": "^14.0.2",
-    "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-apollo": "^2.3.1",
     "react-dom": "^16.6.3",
@@ -30,6 +29,7 @@
     "codegen": "apollo codegen:generate src/types/api.d.ts --queries='src/**/!(*.local).ts' --addTypename --localSchemaFile schema.json --target typescript --outputFlat"
   },
   "devDependencies": {
+    "@types/dotenv": "^6.1.0",
     "@types/google-maps-react": "^2.0.1",
     "@types/googlemaps": "^3.30.16",
     "@types/jest": "^23.3.9",
