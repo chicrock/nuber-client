@@ -1,18 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { toast } from "react-toastify";
-import styled from "../../typed-components";
+import { reverseGeoCode } from "src/mapHelpers";
 import FindAddressPresenter from "./FindAddressPresenter";
 
 interface IState {
   lat: number;
   lng: number;
+  address: string;
 }
-
-const Container = styled.div``;
 
 class FindAddressContainer extends React.Component<any, IState> {
   public state = {
+    address: "",
     lat: 0,
     lng: 0,
   };
@@ -33,19 +33,26 @@ class FindAddressContainer extends React.Component<any, IState> {
   }
 
   public render() {
+    const { address } = this.state;
     return (
-      <Container>
-        <FindAddressPresenter mapRef={this.mapRef} />
-      </Container>
+      <FindAddressPresenter
+        mapRef={this.mapRef}
+        address={address}
+        onInputChange={this.onInputChange}
+        onInputBlur={this.onInputBlur}
+      />
     );
   }
 
-  public handleGeoSuccess = (position: Position) => {
+  public handleGeoSuccess = async (position: Position) => {
     const {
       coords: { latitude, longitude },
     } = position;
 
+    const address = await reverseGeoCode(latitude, longitude);
+
     this.setState({
+      address,
       lat: latitude,
       lng: longitude,
     });
@@ -73,15 +80,30 @@ class FindAddressContainer extends React.Component<any, IState> {
     this.map.addListener("dragend", this.handleDragEnd);
   };
 
-  public handleDragEnd = () => {
+  public handleDragEnd = async () => {
     const newCenter = this.map.getCenter();
     const lat = newCenter.lat();
     const lng = newCenter.lng();
+    const address = await reverseGeoCode(lat, lng);
 
     this.setState({
+      address,
       lat,
       lng,
     });
+  };
+
+  public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { name, value },
+    } = event;
+    this.setState({
+      [name]: value,
+    } as any);
+  };
+
+  public onInputBlur = () => {
+    console.log("Address updated");
   };
 }
 

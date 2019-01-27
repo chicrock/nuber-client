@@ -76,6 +76,7 @@ yarn add --dev @types/google-maps-react @types/googlemaps
 ```
 
 - Get the Google Maps Javascript API key from [Google Console](https://console.cloud.google.com/)
+- Need Geocoding API authorization.
 
 ## Screens
 
@@ -178,4 +179,16 @@ const {
   "https://api.cloudinary.com/v1_1/[cloudinary_user_name]/image/upload",
   formData
 );
+```
+
+## Use Dotenv
+
+- If you want to use dotenv on reactjs project that create with create-react-app, you should add prefix like `REACT_APP_` on your environmental varialbes.
+
+### .env
+
+```bash
+REACT_APP_CLOUDINARY_KEY=
+REACT_APP_CLOUDINARY_PRESET=
+REACT_APP_GOOGLE_MAPS_API_KEY=
 ```
