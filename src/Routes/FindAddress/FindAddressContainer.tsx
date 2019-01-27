@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { toast } from "react-toastify";
-import { reverseGeoCode } from "src/mapHelpers";
+import { geoCode, reverseGeoCode } from "src/mapHelpers";
 import FindAddressPresenter from "./FindAddressPresenter";
 
 interface IState {
@@ -44,20 +44,18 @@ class FindAddressContainer extends React.Component<any, IState> {
     );
   }
 
-  public handleGeoSuccess = async (position: Position) => {
+  public handleGeoSuccess = (position: Position) => {
     const {
       coords: { latitude, longitude },
     } = position;
 
-    const address = await reverseGeoCode(latitude, longitude);
-
     this.setState({
-      address,
       lat: latitude,
       lng: longitude,
     });
-
     this.loadMap(latitude, longitude);
+
+    this.reverseGeoCodeAddress(latitude, longitude);
   };
 
   public handleGeoError = (error: PositionError) => {
@@ -74,23 +72,24 @@ class FindAddressContainer extends React.Component<any, IState> {
         lng,
       },
       disableDefaultUI: true,
+      minZoom: 8,
       zoom: 11,
     };
     this.map = new maps.Map(mapNode, mapConfig);
     this.map.addListener("dragend", this.handleDragEnd);
   };
 
-  public handleDragEnd = async () => {
+  public handleDragEnd = () => {
     const newCenter = this.map.getCenter();
     const lat = newCenter.lat();
     const lng = newCenter.lng();
-    const address = await reverseGeoCode(lat, lng);
 
     this.setState({
-      address,
       lat,
       lng,
     });
+
+    this.reverseGeoCodeAddress(lat, lng);
   };
 
   public onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,8 +101,33 @@ class FindAddressContainer extends React.Component<any, IState> {
     } as any);
   };
 
-  public onInputBlur = () => {
-    console.log("Address updated");
+  public onInputBlur = async () => {
+    const { address } = this.state;
+    const result = await geoCode(address);
+
+    if (result === false) {
+      toast.error("Can't find location");
+    } else {
+      const { formatted_address, lat, lng } = result;
+
+      this.setState({
+        address: formatted_address,
+        lat,
+        lng,
+      });
+
+      this.map.panTo({ lat, lng });
+    }
+  };
+
+  public reverseGeoCodeAddress = async (lat: number, lng: number) => {
+    const address = await reverseGeoCode(lat, lng);
+
+    if (address !== false) {
+      this.setState({
+        address,
+      });
+    }
   };
 }
 
