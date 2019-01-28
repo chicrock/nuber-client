@@ -1,6 +1,7 @@
 import React from "react";
 import Helmet from "react-helmet";
 import AddressBar from "src/Components/AddressBar";
+import Button from "../../Components/Button";
 import styled from "../../typed-components";
 
 const Container = styled.div``;
@@ -26,17 +27,35 @@ const Center = styled.div`
   bottom: 0;
 `;
 
+const ExtendedButton = styled(Button)`
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 10;
+  height: auto;
+  width: 80%;
+`;
+
 interface IProps {
   address: string;
   mapRef: any;
   onInputBlur: () => void;
   onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onPickPlace: () => void;
 }
 
 /// Stateless Component cannot get ref. So, make stateful component
 class FindAddressPresenter extends React.Component<IProps> {
   public render() {
-    const { mapRef, address, onInputBlur, onInputChange } = this.props;
+    const {
+      mapRef,
+      address,
+      onInputBlur,
+      onInputChange,
+      onPickPlace,
+    } = this.props;
 
     return (
       <Container>
@@ -49,6 +68,7 @@ class FindAddressPresenter extends React.Component<IProps> {
           name={"address"}
           onChange={onInputChange}
         />
+        <ExtendedButton value={"Pick this place"} onClick={onPickPlace} />
         <Center>📍</Center>
         <Map ref={mapRef} />
       </Container>

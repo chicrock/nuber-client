@@ -91,12 +91,14 @@ yarn add dotenv
 
     - [ ] Home
     - [ ] Ride
-    = [x] Edit Account
+    - [ ] Chat
+    - [x] Edit Account
     - [x] Settings
     - [x] Saved Places
     - [x] Add Place
-    - [ ] Find Address
+    - [x] Find Address
     - [ ] Challenge: Ride History
+    - [ ] Challenge: Email Sign In
 
 ## Resource
 
