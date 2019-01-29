@@ -51,7 +51,7 @@ class FindAddressContainer extends React.Component<IProps, IState> {
     );
   }
 
-  public handleGeoSuccess = (position: Position) => {
+  public handleGeoSuccess: PositionCallback = (position: Position) => {
     const {
       coords: { latitude, longitude },
     } = position;
@@ -65,7 +65,7 @@ class FindAddressContainer extends React.Component<IProps, IState> {
     this.reverseGeoCodeAddress(latitude, longitude);
   };
 
-  public handleGeoError = (error: PositionError) => {
+  public handleGeoError: PositionErrorCallback = (error: PositionError) => {
     toast.error(error.message);
   };
 
