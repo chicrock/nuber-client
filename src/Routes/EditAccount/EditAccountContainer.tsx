@@ -3,6 +3,7 @@ import React from "react";
 import { Mutation, Query } from "react-apollo";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
+import { CLOUDINARY_KEY, CLOUDINARY_PRESET } from "src/keys";
 import { USER_PROFILE } from "src/sharedQueries";
 import {
   updateProfile,
@@ -89,11 +90,6 @@ class EditAccountContainer extends React.Component<IProps, IState> {
       target: { name, value, files },
     } = event;
 
-    const {
-      REACT_APP_CLOUDINARY_KEY,
-      REACT_APP_CLOUDINARY_PRESET,
-    } = process.env;
-
     if (files) {
       this.setState({
         uploading: true,
@@ -101,8 +97,8 @@ class EditAccountContainer extends React.Component<IProps, IState> {
 
       const formData = new FormData();
       formData.append("file", files[0]);
-      formData.append("api_key", REACT_APP_CLOUDINARY_KEY || "");
-      formData.append("upload_preset", REACT_APP_CLOUDINARY_PRESET || "");
+      formData.append("api_key", CLOUDINARY_KEY || "");
+      formData.append("upload_preset", CLOUDINARY_PRESET || "");
       formData.append("timestamp", String(Date.now() / 1000));
 
       const {

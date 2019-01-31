@@ -185,7 +185,7 @@ const {
 
 ## Use Dotenv
 
-- If you want to use dotenv on reactjs project that create with create-react-app, you should add prefix like `REACT_APP_` on your environmental varialbes.
+- If you want to use dotenv on reactjs project that create with create-react-app, you should add prefix like `` on your environmental varialbes.
 
 ### .env
 
