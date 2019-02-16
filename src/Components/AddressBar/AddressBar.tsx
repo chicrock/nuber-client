@@ -7,7 +7,7 @@ const Container = styled.input`
   border-radius: 5px;
   -webkit-appearance: none;
   z-index: 2;
-  width: 80%;
+  width: 75%;
   border: 0;
   font-size: 16px;
   padding: 15px 10px;
@@ -21,17 +21,25 @@ const Container = styled.input`
 
 interface IProps {
   value: string;
-  onBlur: () => void;
+  onBlur: any;
   name: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
 }
 
-const AddressBar: React.SFC<IProps> = ({ value, onBlur, onChange, name }) => (
+const AddressBar: React.SFC<IProps> = ({
+  value,
+  onBlur,
+  onChange,
+  name,
+  placeholder,
+}) => (
   <Container
     value={value}
     onBlur={onBlur}
+    onSubmit={onBlur}
     onChange={onChange}
-    placeholder={"Type Address"}
+    placeholder={placeholder || "TYPE ADDRESS"}
     name={name}
   />
 );
