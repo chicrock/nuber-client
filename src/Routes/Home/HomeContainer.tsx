@@ -40,7 +40,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     lat: 0,
     lng: 0,
     price: 0,
-    toAddress: "",
+    toAddress: "272 High Holborn, London WC1V 7EY 영국",
     toLat: 0,
     toLng: 0,
   };
@@ -55,7 +55,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     );
   }
   public render() {
-    const { isMenuOpen, toAddress } = this.state;
+    const { isMenuOpen, toAddress, price } = this.state;
 
     return (
       <ProfileQuery query={USER_PROFILE}>
@@ -68,11 +68,13 @@ class HomeContainer extends React.Component<IProps, IState> {
             toAddress={toAddress}
             onInputChange={this.onInputChange}
             onAddressSubmit={this.onAddressSubmit}
+            price={price}
           />
         )}
       </ProfileQuery>
     );
   }
+
   public toggleMenu = () => {
     this.setState(state => {
       return {
@@ -168,8 +170,8 @@ class HomeContainer extends React.Component<IProps, IState> {
       this.toMarker.setMap(this.map);
 
       const bounds = new google.maps.LatLngBounds();
-      bounds.extend({ lat, lng });
       bounds.extend({ lat: this.state.lat, lng: this.state.lng });
+      bounds.extend({ lat, lng });
 
       this.map.fitBounds(bounds);
 
@@ -222,12 +224,26 @@ class HomeContainer extends React.Component<IProps, IState> {
       this.directions.setDirections(result);
       this.directions.setMap(this.map);
 
-      this.setState({
-        distance,
-        duration,
-      });
+      this.setState(
+        {
+          distance,
+          duration,
+        },
+        this.setPrice
+      );
     } else {
       toast.error("There is no route there");
+    }
+  };
+
+  public setPrice = () => {
+    const { distance } = this.state;
+
+    if (distance) {
+      const price = parseFloat(distance.replace(",", "")) * 2;
+      this.setState({
+        price,
+      });
     }
   };
 }
