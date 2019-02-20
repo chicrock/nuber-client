@@ -140,6 +140,10 @@ class HomeContainer extends React.Component<IProps, IState> {
 
     this.userMarker.setPosition({ lat, lng });
     this.map.panTo({ lat, lng });
+    this.setState({
+      lat,
+      lng,
+    });
     reportLocation({
       variables: {
         lat,
@@ -163,7 +167,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     } as any);
   };
   public onAddressSubmit = async () => {
-    const { toAddress } = this.state;
+    const { toAddress, lat: lastLat, lng: lastLng } = this.state;
     const { google } = this.props;
     const maps = google.maps;
     const result = await geoCode(toAddress);
@@ -183,8 +187,8 @@ class HomeContainer extends React.Component<IProps, IState> {
       this.toMarker.setMap(this.map);
 
       const bounds = new google.maps.LatLngBounds();
-      bounds.extend({ lat: this.state.lat, lng: this.state.lng });
       bounds.extend({ lat, lng });
+      bounds.extend({ lat: lastLat, lng: lastLng });
 
       this.map.fitBounds(bounds);
 
