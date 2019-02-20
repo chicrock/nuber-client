@@ -6,12 +6,13 @@ import { toast } from "react-toastify";
 import { geoCode } from "src/mapHelpers";
 import { USER_PROFILE } from "src/sharedQueries";
 import {
+  getDrivers,
   reportMovement,
   reportMovementVariables,
   userProfile,
 } from "src/types/api";
 import HomePresenter from "./HomePresenter";
-import { REPORT_LOCATION } from "./HomeQueries";
+import { GET_NEARBY_DRIVERS, REPORT_LOCATION } from "./HomeQueries";
 
 interface IState {
   distance?: string;
@@ -31,6 +32,7 @@ interface IProps extends RouteComponentProps<any> {
 }
 
 class ProfileQuery extends Query<userProfile> {}
+class NearbyQuery extends Query<getDrivers> {}
 
 class HomeContainer extends React.Component<IProps, IState> {
   public mapRef: any;
@@ -46,7 +48,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     lat: 0,
     lng: 0,
     price: 0,
-    toAddress: "272 High Holborn, London WC1V 7EY 영국",
+    toAddress: "",
     toLat: 0,
     toLng: 0,
   };
@@ -65,18 +67,39 @@ class HomeContainer extends React.Component<IProps, IState> {
 
     return (
       <ProfileQuery query={USER_PROFILE}>
-        {({ loading }) => (
-          <HomePresenter
-            loading={loading}
-            isMenuOpen={isMenuOpen}
-            toggleMenu={this.toggleMenu}
-            mapRef={this.mapRef}
-            toAddress={toAddress}
-            onInputChange={this.onInputChange}
-            onAddressSubmit={this.onAddressSubmit}
-            price={price}
-          />
-        )}
+        {({ data, loading }) => {
+          if (data && data.GetMyProfile) {
+            const { GetMyProfile: { user = null } = {} } = data;
+
+            if (user) {
+              return (
+                <NearbyQuery
+                  query={GET_NEARBY_DRIVERS}
+                  skip={user!.isDriving}
+                  onCompleted={this.handleNearbyDrivers}
+                >
+                  {({}) => (
+                    <HomePresenter
+                      data={data}
+                      loading={loading}
+                      isMenuOpen={isMenuOpen}
+                      toggleMenu={this.toggleMenu}
+                      mapRef={this.mapRef}
+                      toAddress={toAddress}
+                      onInputChange={this.onInputChange}
+                      onAddressSubmit={this.onAddressSubmit}
+                      price={price}
+                    />
+                  )}
+                </NearbyQuery>
+              );
+            } else {
+              return null;
+            }
+          } else {
+            return "Loading";
+          }
+        }}
       </ProfileQuery>
     );
   }
@@ -102,6 +125,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     const { google } = this.props;
     const maps = google.maps;
     const mapNode = ReactDOM.findDOMNode(this.mapRef.current);
+
     const mapConfig: google.maps.MapOptions = {
       center: {
         lat,
@@ -261,6 +285,17 @@ class HomeContainer extends React.Component<IProps, IState> {
       this.setState({
         price,
       });
+    }
+  };
+
+  public handleNearbyDrivers = (data: {} | getDrivers) => {
+    if ("GetNearbyDrivers" in data) {
+      const {
+        GetNearbyDrivers: { drivers, ok },
+      } = data;
+      if (ok && drivers) {
+        console.log(drivers);
+      }
     }
   };
 }
