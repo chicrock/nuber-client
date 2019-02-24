@@ -1,22 +1,29 @@
 import React from "react";
-import { graphql, MutationFn, Query } from "react-apollo";
+import { graphql, Mutation, MutationFn, Query } from "react-apollo";
 import ReactDOM from "react-dom";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
-import { geoCode } from "src/mapHelpers";
+import { geoCode, reverseGeoCode } from "src/mapHelpers";
 import { USER_PROFILE } from "src/sharedQueries";
 import {
   getDrivers,
   reportMovement,
   reportMovementVariables,
+  requestRide,
+  requestRideVariables,
   userProfile,
 } from "src/types/api";
 import HomePresenter from "./HomePresenter";
-import { GET_NEARBY_DRIVERS, REPORT_LOCATION } from "./HomeQueries";
+import {
+  GET_NEARBY_DRIVERS,
+  REPORT_LOCATION,
+  REQUEST_RIDE,
+} from "./HomeQueries";
 
 interface IState {
   distance?: string;
   duration?: string;
+  fromAddress?: string;
   isMenuOpen: boolean;
   lat: number;
   lng: number;
@@ -33,6 +40,7 @@ interface IProps extends RouteComponentProps<any> {
 
 class ProfileQuery extends Query<userProfile> {}
 class NearbyQuery extends Query<getDrivers> {}
+class RequestRideMutation extends Mutation<requestRide, requestRideVariables> {}
 
 class HomeContainer extends React.Component<IProps, IState> {
   public mapRef: any;
@@ -45,11 +53,12 @@ class HomeContainer extends React.Component<IProps, IState> {
   public state = {
     distance: "",
     duration: "",
+    fromAddress: "",
     isMenuOpen: false,
     lat: 0,
     lng: 0,
     price: 0,
-    toAddress: "",
+    toAddress: "Great Ormond St, London WC1N 3JH 영국",
     toLat: 0,
     toLng: 0,
   };
@@ -65,39 +74,68 @@ class HomeContainer extends React.Component<IProps, IState> {
     );
   }
   public render() {
-    const { isMenuOpen, toAddress, price } = this.state;
+    const {
+      distance,
+      duration,
+      fromAddress,
+      isMenuOpen,
+      lat,
+      lng,
+      price,
+      toAddress,
+      toLat,
+      toLng,
+    } = this.state;
 
     return (
-      <ProfileQuery query={USER_PROFILE}>
-        {({ data, loading }) => (
-          <NearbyQuery
-            query={GET_NEARBY_DRIVERS}
-            pollInterval={1000}
-            skip={
-              (data &&
-                data.GetMyProfile &&
-                data.GetMyProfile.user &&
-                data.GetMyProfile.user.isDriving) ||
-              false
-            }
-            onCompleted={this.handleNearbyDrivers}
-          >
-            {({}) => (
-              <HomePresenter
-                data={data}
-                loading={loading}
-                isMenuOpen={isMenuOpen}
-                toggleMenu={this.toggleMenu}
-                mapRef={this.mapRef}
-                toAddress={toAddress}
-                onInputChange={this.onInputChange}
-                onAddressSubmit={this.onAddressSubmit}
-                price={price}
-              />
+      <RequestRideMutation
+        mutation={REQUEST_RIDE}
+        variables={{
+          distance,
+          dropOffAddress: toAddress,
+          dropOffLat: toLat,
+          dropOffLng: toLng,
+          duration: duration || "",
+          pickupAddress: fromAddress,
+          pickupLat: lat,
+          pickupLng: lng,
+          price,
+        }}
+      >
+        {requestRideFn => (
+          <ProfileQuery query={USER_PROFILE}>
+            {({ data, loading }) => (
+              <NearbyQuery
+                query={GET_NEARBY_DRIVERS}
+                pollInterval={1000}
+                skip={
+                  (data &&
+                    data.GetMyProfile &&
+                    data.GetMyProfile.user &&
+                    data.GetMyProfile.user.isDriving) ||
+                  false
+                }
+                onCompleted={this.handleNearbyDrivers}
+              >
+                {({}) => (
+                  <HomePresenter
+                    data={data}
+                    loading={loading}
+                    isMenuOpen={isMenuOpen}
+                    toggleMenu={this.toggleMenu}
+                    mapRef={this.mapRef}
+                    toAddress={toAddress}
+                    onInputChange={this.onInputChange}
+                    onAddressSubmit={this.onAddressSubmit}
+                    price={price}
+                    requestRideFn={requestRideFn}
+                  />
+                )}
+              </NearbyQuery>
             )}
-          </NearbyQuery>
+          </ProfileQuery>
         )}
-      </ProfileQuery>
+      </RequestRideMutation>
     );
   }
 
@@ -116,7 +154,17 @@ class HomeContainer extends React.Component<IProps, IState> {
       lat: latitude,
       lng: longitude,
     });
+    this.getFromAddress(latitude, longitude);
     this.loadMap(latitude, longitude);
+  };
+  public getFromAddress = async (lat: number, lng: number) => {
+    const address = await reverseGeoCode(lat, lng);
+    if (address) {
+      this.setState({
+        fromAddress: address,
+      });
+      console.log(address);
+    }
   };
   public loadMap = (lat, lng) => {
     const { google } = this.props;
@@ -171,6 +219,7 @@ class HomeContainer extends React.Component<IProps, IState> {
         lng,
       },
     });
+    this.getFromAddress(lat, lng);
   };
   public handleGeoWatchError = () => {
     console.log("Error watching you");

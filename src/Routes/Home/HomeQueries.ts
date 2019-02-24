@@ -22,3 +22,35 @@ export const GET_NEARBY_DRIVERS = gql`
     }
   }
 `;
+
+export const REQUEST_RIDE = gql`
+  mutation requestRide(
+    $pickupAddress: String!
+    $pickupLat: Float!
+    $pickupLng: Float!
+    $dropOffAddress: String!
+    $dropOffLat: Float!
+    $dropOffLng: Float!
+    $price: Float!
+    $distance: String!
+    $duration: String!
+  ) {
+    RequestRide(
+      pickupAddress: $pickupAddress
+      pickupLat: $pickupLat
+      pickupLng: $pickupLng
+      dropOffAddress: $dropOffAddress
+      dropOffLat: $dropOffLat
+      dropOffLng: $dropOffLng
+      price: $price
+      distance: $distance
+      duration: $duration
+    ) {
+      ok
+      error
+      ride {
+        id
+      }
+    }
+  }
+`;
