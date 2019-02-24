@@ -150,6 +150,12 @@ yarn run codegen
 yarn add react-facebook-login
 ```
 
+### Eject Apollo boost
+
+```bash
+yarn add apollo-cache-inmemory apollo-client apollo-link apollo-link-error apollo-link-http apollo-link-state apollo-link-ws apollo-utilities subscriptions-transport-ws
+```
+
 ### GET App ID
 
 - [Facebook developer](https://developers.facebook.com)
