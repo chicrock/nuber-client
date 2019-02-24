@@ -2,7 +2,6 @@ import React from "react";
 import { MutationFn } from "react-apollo";
 import Helmet from "react-helmet";
 import Sidebar from "react-sidebar";
-import { getRides, userProfile } from "src/types/api";
 import AddressBar from "../../Components/AddressBar";
 import Button from "../../Components/Button";
 import Menu from "../../Components/Menu";
@@ -50,12 +49,12 @@ const RequestButton = styled(ExtendedButton)`
 
 interface IProps {
   acceptRideFn?: MutationFn;
-  data?: userProfile;
+  data?: any;
   loading: boolean;
   isMenuOpen: boolean;
   toggleMenu: () => void;
   mapRef: any;
-  nearbyRide?: getRides;
+  nearbyRide?: any;
   toAddress: string;
   onAddressSubmit: () => void;
   onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;

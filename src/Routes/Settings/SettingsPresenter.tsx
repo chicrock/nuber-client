@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import Header from "../../Components/Header";
 import Place from "../../Components/Place";
 import styled from "../../typed-components";
-import { getPlaces, userProfile } from "../../types/api";
 
 const Container = styled.div`
   padding: 0px 40px;
@@ -44,9 +43,9 @@ const SLink = styled(Link)`
 
 interface IProps {
   logUserOut: MutationFn;
-  placesData?: getPlaces;
+  placesData?: any;
   placesLoading: boolean;
-  userData?: userProfile;
+  userData?: any;
   userDataLoading: boolean;
 }
 

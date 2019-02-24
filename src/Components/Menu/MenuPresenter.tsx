@@ -1,7 +1,7 @@
 import React from "react";
 import { MutationFn } from "react-apollo";
 import { Link } from "react-router-dom";
-import { toggleDriving, userProfile } from "src/types/api";
+import { toggleDriving } from "src/types/api";
 import noPhoto from "../../images/noPhoto.jpg";
 import styled from "../../typed-components";
 
@@ -78,7 +78,7 @@ const ToggleDriving = styled("button")<IToggleProps>`
 `;
 
 interface IProps {
-  data?: userProfile;
+  data?: any;
   loading: boolean;
   toggleDrivingFn: MutationFn<toggleDriving>;
 }

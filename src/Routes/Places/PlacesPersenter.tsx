@@ -3,7 +3,6 @@ import Helmet from "react-helmet";
 import { Link } from "react-router-dom";
 import Header from "src/Components/Header";
 import Place from "src/Components/Place";
-import { getPlaces } from "src/types/api";
 import styled from "../../typed-components";
 
 const Container = styled.div`
@@ -15,7 +14,7 @@ const SLink = styled(Link)`
 `;
 
 interface IProps {
-  data?: getPlaces;
+  data?: any;
   loading: boolean;
 }
 
