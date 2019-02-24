@@ -1,8 +1,12 @@
 import { gql } from "apollo-boost";
 
 export const REPORT_LOCATION = gql`
-  mutation reportMovement($lat: Float!, $lng: Float!) {
-    ReportMovement(lastLat: $lat, lastLng: $lng) {
+  mutation reportMovement($lat: Float!, $lng: Float!, $orientation: Float) {
+    ReportMovement(
+      lastLat: $lat
+      lastLng: $lng
+      lastOrientation: $orientation
+    ) {
       ok
       error
     }
@@ -18,6 +22,7 @@ export const GET_NEARBY_DRIVERS = gql`
         id
         lastLat
         lastLng
+        lastOrientation
       }
     }
   }
@@ -51,6 +56,36 @@ export const REQUEST_RIDE = gql`
       ride {
         id
       }
+    }
+  }
+`;
+
+export const GET_NEARBY_RIDE = gql`
+  query getRides {
+    GetNearbyRide {
+      ok
+      error
+      ride {
+        id
+        pickupAddress
+        dropOffAddress
+        price
+        distance
+        duration
+        passenger {
+          fullName
+          profilePhoto
+        }
+      }
+    }
+  }
+`;
+
+export const ACCEPT_RIDE = gql`
+  mutation acceptRide($rideId: Int!) {
+    UpdateRideStatus(rideId: $rideId, status: ACCEPTED) {
+      ok
+      error
     }
   }
 `;

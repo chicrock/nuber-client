@@ -6,7 +6,10 @@ import { toast } from "react-toastify";
 import { geoCode, reverseGeoCode } from "src/mapHelpers";
 import { USER_PROFILE } from "src/sharedQueries";
 import {
+  acceptRide,
+  acceptRideVariables,
   getDrivers,
+  getRides,
   reportMovement,
   reportMovementVariables,
   requestRide,
@@ -15,7 +18,9 @@ import {
 } from "src/types/api";
 import HomePresenter from "./HomePresenter";
 import {
+  ACCEPT_RIDE,
   GET_NEARBY_DRIVERS,
+  GET_NEARBY_RIDE,
   REPORT_LOCATION,
   REQUEST_RIDE,
 } from "./HomeQueries";
@@ -24,9 +29,11 @@ interface IState {
   distance?: string;
   duration?: string;
   fromAddress?: string;
+  isDriving: boolean;
   isMenuOpen: boolean;
   lat: number;
   lng: number;
+  orientation: number;
   price: number;
   toAddress: string;
   toLat: number;
@@ -40,7 +47,9 @@ interface IProps extends RouteComponentProps<any> {
 
 class ProfileQuery extends Query<userProfile> {}
 class NearbyQuery extends Query<getDrivers> {}
+class GetNearbyRides extends Query<getRides> {}
 class RequestRideMutation extends Mutation<requestRide, requestRideVariables> {}
+class AcceptRide extends Mutation<acceptRide, acceptRideVariables> {}
 
 class HomeContainer extends React.Component<IProps, IState> {
   public mapRef: any;
@@ -54,9 +63,11 @@ class HomeContainer extends React.Component<IProps, IState> {
     distance: "",
     duration: "",
     fromAddress: "",
+    isDriving: false,
     isMenuOpen: false,
     lat: 0,
     lng: 0,
+    orientation: 0,
     price: 0,
     toAddress: "Great Ormond St, London WC1N 3JH 영국",
     toLat: 0,
@@ -72,12 +83,15 @@ class HomeContainer extends React.Component<IProps, IState> {
       this.handleGeoSuccess,
       this.handleGeoError
     );
+
+    window.addEventListener("deviceorientation", this.handleOrientation, true);
   }
   public render() {
     const {
       distance,
       duration,
       fromAddress,
+      isDriving,
       isMenuOpen,
       lat,
       lng,
@@ -90,6 +104,7 @@ class HomeContainer extends React.Component<IProps, IState> {
     return (
       <RequestRideMutation
         mutation={REQUEST_RIDE}
+        onCompleted={this.handleRideRequest}
         variables={{
           distance,
           dropOffAddress: toAddress,
@@ -103,37 +118,44 @@ class HomeContainer extends React.Component<IProps, IState> {
         }}
       >
         {requestRideFn => (
-          <ProfileQuery query={USER_PROFILE}>
-            {({ data, loading }) => (
-              <NearbyQuery
-                query={GET_NEARBY_DRIVERS}
-                pollInterval={1000}
-                skip={
-                  (data &&
-                    data.GetMyProfile &&
-                    data.GetMyProfile.user &&
-                    data.GetMyProfile.user.isDriving) ||
-                  false
-                }
-                onCompleted={this.handleNearbyDrivers}
+          <GetNearbyRides query={GET_NEARBY_RIDE} skip={!isDriving}>
+            {({ data: nearbyRide }) => (
+              <ProfileQuery
+                query={USER_PROFILE}
+                onCompleted={this.handleProfileQuery}
               >
-                {({}) => (
-                  <HomePresenter
-                    data={data}
-                    loading={loading}
-                    isMenuOpen={isMenuOpen}
-                    toggleMenu={this.toggleMenu}
-                    mapRef={this.mapRef}
-                    toAddress={toAddress}
-                    onInputChange={this.onInputChange}
-                    onAddressSubmit={this.onAddressSubmit}
-                    price={price}
-                    requestRideFn={requestRideFn}
-                  />
+                {({ data, loading }) => (
+                  <NearbyQuery
+                    query={GET_NEARBY_DRIVERS}
+                    pollInterval={5000}
+                    skip={isDriving}
+                    onCompleted={this.handleNearbyDrivers}
+                  >
+                    {({}) => (
+                      <AcceptRide mutation={ACCEPT_RIDE}>
+                        {acceptRideFn => (
+                          <HomePresenter
+                            acceptRideFn={acceptRideFn}
+                            data={data}
+                            isMenuOpen={isMenuOpen}
+                            loading={loading}
+                            mapRef={this.mapRef}
+                            nearbyRide={nearbyRide}
+                            onInputChange={this.onInputChange}
+                            onAddressSubmit={this.onAddressSubmit}
+                            price={price}
+                            requestRideFn={requestRideFn}
+                            toggleMenu={this.toggleMenu}
+                            toAddress={toAddress}
+                          />
+                        )}
+                      </AcceptRide>
+                    )}
+                  </NearbyQuery>
                 )}
-              </NearbyQuery>
+              </ProfileQuery>
             )}
-          </ProfileQuery>
+          </GetNearbyRides>
         )}
       </RequestRideMutation>
     );
@@ -146,10 +168,10 @@ class HomeContainer extends React.Component<IProps, IState> {
       };
     });
   };
-  public handleGeoSuccess = (positon: Position) => {
+  public handleGeoSuccess = (position: Position) => {
     const {
       coords: { latitude, longitude },
-    } = positon;
+    } = position;
     this.setState({
       lat: latitude,
       lng: longitude,
@@ -163,7 +185,6 @@ class HomeContainer extends React.Component<IProps, IState> {
       this.setState({
         fromAddress: address,
       });
-      console.log(address);
     }
   };
   public loadMap = (lat, lng) => {
@@ -356,10 +377,17 @@ class HomeContainer extends React.Component<IProps, IState> {
                 lat: driver.lastLat,
                 lng: driver.lastLng,
               });
+
+              existingDriver.setIcon({
+                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                rotation: driver.lastOrientation || 0,
+                scale: 5,
+              });
             } else {
               const markerOptions: google.maps.MarkerOptions = {
                 icon: {
                   path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                  rotation: driver.lastOrientation || 0,
                   scale: 5,
                 },
                 position: {
@@ -371,14 +399,58 @@ class HomeContainer extends React.Component<IProps, IState> {
               const newMarker: google.maps.Marker = new google.maps.Marker(
                 markerOptions
               );
-              this.drivers.push(newMarker);
 
               newMarker.set("ID", driver.id);
               newMarker.setMap(this.map);
+              this.drivers.push(newMarker);
             }
           }
         }
       }
+    }
+  };
+  public handleProfileQuery = (data: userProfile) => {
+    const { GetMyProfile } = data;
+    const { isDriving: localDriving } = this.state;
+
+    if (GetMyProfile.user) {
+      const {
+        user: { isDriving },
+      } = GetMyProfile;
+
+      if (localDriving !== isDriving) {
+        this.setState({
+          isDriving,
+        });
+      }
+    }
+  };
+  public handleRideRequest = (data: requestRide) => {
+    const { RequestRide } = data;
+    if (RequestRide.ok) {
+      toast.success("Drive requested, finding a driver");
+    } else {
+      toast.error(RequestRide.error);
+    }
+  };
+
+  public handleOrientation = (data: DeviceOrientationEvent) => {
+    const { alpha } = data;
+    const { lat, lng } = this.state;
+    const { reportLocation } = this.props;
+
+    if (alpha) {
+      this.setState({
+        orientation: alpha,
+      });
+
+      reportLocation({
+        variables: {
+          lat,
+          lng,
+          orientation: alpha,
+        },
+      });
     }
   };
 }
