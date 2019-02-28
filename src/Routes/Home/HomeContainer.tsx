@@ -1,3 +1,4 @@
+import { SubscribeToMoreOptions } from "apollo-boost";
 import React from "react";
 import { graphql, Mutation, MutationFn, Query } from "react-apollo";
 import ReactDOM from "react-dom";
@@ -23,6 +24,7 @@ import {
   GET_NEARBY_RIDE,
   REPORT_LOCATION,
   REQUEST_RIDE,
+  SUBSCRIBE_NEARBY_RIDES,
 } from "./HomeQueries";
 
 interface IState {
@@ -119,42 +121,53 @@ class HomeContainer extends React.Component<IProps, IState> {
       >
         {requestRideFn => (
           <GetNearbyRides query={GET_NEARBY_RIDE} skip={!isDriving}>
-            {({ data: nearbyRide }) => (
-              <ProfileQuery
-                query={USER_PROFILE}
-                onCompleted={this.handleProfileQuery}
-              >
-                {({ data, loading }) => (
-                  <NearbyQuery
-                    query={GET_NEARBY_DRIVERS}
-                    pollInterval={5000}
-                    skip={isDriving}
-                    onCompleted={this.handleNearbyDrivers}
-                  >
-                    {({}) => (
-                      <AcceptRide mutation={ACCEPT_RIDE}>
-                        {acceptRideFn => (
-                          <HomePresenter
-                            acceptRideFn={acceptRideFn}
-                            data={data}
-                            isMenuOpen={isMenuOpen}
-                            loading={loading}
-                            mapRef={this.mapRef}
-                            nearbyRide={nearbyRide}
-                            onInputChange={this.onInputChange}
-                            onAddressSubmit={this.onAddressSubmit}
-                            price={price}
-                            requestRideFn={requestRideFn}
-                            toggleMenu={this.toggleMenu}
-                            toAddress={toAddress}
-                          />
-                        )}
-                      </AcceptRide>
-                    )}
-                  </NearbyQuery>
-                )}
-              </ProfileQuery>
-            )}
+            {({ subscribeToMore, data: nearbyRide }) => {
+              const rideSubscriptionOptions: SubscribeToMoreOptions = {
+                document: SUBSCRIBE_NEARBY_RIDES,
+                updateQuery: this.handleSubscriptionUpdate,
+              };
+
+              if (isDriving) {
+                subscribeToMore(rideSubscriptionOptions);
+              }
+
+              return (
+                <ProfileQuery
+                  query={USER_PROFILE}
+                  onCompleted={this.handleProfileQuery}
+                >
+                  {({ data, loading }) => (
+                    <NearbyQuery
+                      query={GET_NEARBY_DRIVERS}
+                      pollInterval={5000}
+                      skip={isDriving}
+                      onCompleted={this.handleNearbyDrivers}
+                    >
+                      {({}) => (
+                        <AcceptRide mutation={ACCEPT_RIDE}>
+                          {acceptRideFn => (
+                            <HomePresenter
+                              acceptRideFn={acceptRideFn}
+                              data={data}
+                              isMenuOpen={isMenuOpen}
+                              loading={loading}
+                              mapRef={this.mapRef}
+                              nearbyRide={nearbyRide}
+                              onInputChange={this.onInputChange}
+                              onAddressSubmit={this.onAddressSubmit}
+                              price={price}
+                              requestRideFn={requestRideFn}
+                              toggleMenu={this.toggleMenu}
+                              toAddress={toAddress}
+                            />
+                          )}
+                        </AcceptRide>
+                      )}
+                    </NearbyQuery>
+                  )}
+                </ProfileQuery>
+              );
+            }}
           </GetNearbyRides>
         )}
       </RequestRideMutation>
@@ -400,9 +413,10 @@ class HomeContainer extends React.Component<IProps, IState> {
                 markerOptions
               );
 
+              this.drivers.push(newMarker);
+
               newMarker.set("ID", driver.id);
               newMarker.setMap(this.map);
-              this.drivers.push(newMarker);
             }
           }
         }
@@ -452,6 +466,10 @@ class HomeContainer extends React.Component<IProps, IState> {
         },
       });
     }
+  };
+
+  public handleSubscriptionUpdate = data => {
+    console.log(data);
   };
 }
 
