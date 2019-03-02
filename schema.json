@@ -1093,6 +1093,18 @@
             "deprecationReason": null
           },
           {
+            "name": "driver",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "driverId",
             "description": "",
             "args": [],
@@ -1106,22 +1118,6 @@
           },
           {
             "name": "passenger",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "User",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "driver",
             "description": "",
             "args": [],
             "type": {
@@ -2012,7 +2008,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "ENUM",
-                    "name": "StatusOpeions",
+                    "name": "StatusOptions",
                     "ofType": null
                   }
                 },
@@ -2738,7 +2734,7 @@
       },
       {
         "kind": "ENUM",
-        "name": "StatusOpeions",
+        "name": "StatusOptions",
         "description": "",
         "fields": null,
         "inputFields": null,
