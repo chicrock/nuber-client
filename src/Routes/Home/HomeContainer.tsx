@@ -468,8 +468,19 @@ class HomeContainer extends React.Component<IProps, IState> {
     }
   };
 
-  public handleSubscriptionUpdate = data => {
-    console.log(data);
+  public handleSubscriptionUpdate = (prev, { subscriptionData }) => {
+    if (!subscriptionData.data) {
+      return prev;
+    }
+
+    const newObject = Object.assign({}, prev, {
+      GetNearbyRide: {
+        ...prev.GetNearbyRide,
+        ride: subscriptionData.data.NearbyRideSubscription,
+      },
+    });
+
+    return newObject;
   };
 }
 
