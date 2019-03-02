@@ -89,7 +89,7 @@ yarn add dotenv
 
 ### Logged In
 
-    - [ ] Home
+    - [x] Home
     - [ ] Ride
     - [ ] Chat
     - [x] Edit Account
