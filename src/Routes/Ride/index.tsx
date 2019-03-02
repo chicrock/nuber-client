@@ -1,5 +1,3 @@
-import React from "react";
+import RideContainer from "./RideContainer";
 
-const R = () => <span>tmp</span>;
-
-export default R;
+export default RideContainer;

@@ -27,6 +27,8 @@ import {
   SUBSCRIBE_NEARBY_RIDES,
 } from "./HomeQueries";
 
+import routes from "../../routes";
+
 interface IState {
   distance?: string;
   duration?: string;
@@ -144,7 +146,10 @@ class HomeContainer extends React.Component<IProps, IState> {
                       onCompleted={this.handleNearbyDrivers}
                     >
                       {({}) => (
-                        <AcceptRide mutation={ACCEPT_RIDE}>
+                        <AcceptRide
+                          mutation={ACCEPT_RIDE}
+                          onCompleted={this.handleRideAcceptance}
+                        >
                           {acceptRideFn => (
                             <HomePresenter
                               acceptRideFn={acceptRideFn}
@@ -336,11 +341,11 @@ class HomeContainer extends React.Component<IProps, IState> {
 
   public drawRoutes = (result, status) => {
     if (status === google.maps.DirectionsStatus.OK) {
-      const { routes } = result;
+      const { routes: routesResult } = result;
       const {
         distance: { text: distance },
         duration: { text: duration },
-      } = routes[0].legs[0];
+      } = routesResult[0].legs[0];
 
       this.directions.setDirections(result);
       this.directions.setMap(this.map);
@@ -440,9 +445,13 @@ class HomeContainer extends React.Component<IProps, IState> {
     }
   };
   public handleRideRequest = (data: requestRide) => {
+    const { history } = this.props;
     const { RequestRide } = data;
     if (RequestRide.ok) {
       toast.success("Drive requested, finding a driver");
+      history.push({
+        pathname: `${routes.ride}/${RequestRide.ride!.id}`,
+      });
     } else {
       toast.error(RequestRide.error);
     }
@@ -481,6 +490,15 @@ class HomeContainer extends React.Component<IProps, IState> {
     });
 
     return newObject;
+  };
+
+  public handleRideAcceptance = (data: acceptRide) => {
+    const { history } = this.props;
+    const { UpdateRideStatus } = data;
+
+    if (UpdateRideStatus.ok) {
+      history.push(`${routes.ride}/${UpdateRideStatus.rideId}`);
+    }
   };
 }
 
