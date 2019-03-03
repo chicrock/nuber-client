@@ -3304,7 +3304,7 @@
         "description": "",
         "fields": [
           {
-            "name": "MessageSubscription",
+            "name": "ChatMessageSubscription",
             "description": "",
             "args": [],
             "type": {

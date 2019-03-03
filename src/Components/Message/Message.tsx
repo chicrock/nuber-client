@@ -7,8 +7,7 @@ const Container = styled("div")<{ mine: boolean }>`
   color: white;
   padding: 10px 20px;
   border-radius: 20px;
-  min-width: 100px;
-  margin: 3px 0px;
+  margin-bottom: 3px;
   align-self: ${props => (props.mine ? "flex-end" : "flex-start")};
   border-bottom-right-radius: ${props => (props.mine ? "0px" : "20px")};
   border-bottom-left-radius: ${props => (!props.mine ? "0px" : "20px")};

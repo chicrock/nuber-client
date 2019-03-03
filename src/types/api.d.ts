@@ -76,6 +76,7 @@ export interface addPlaceVariables {
 
 export interface getChat_GetChat_chat_messages {
   __typename: "Message";
+  id: number;
   text: string;
   userId: number | null;
 }
@@ -131,6 +132,25 @@ export interface sendMessage {
 export interface sendMessageVariables {
   chatId: number;
   text: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL subscription operation: messageSubscription
+// ====================================================
+
+export interface messageSubscription_ChatMessageSubscription {
+  __typename: "Message";
+  id: number;
+  text: string;
+  userId: number | null;
+}
+
+export interface messageSubscription {
+  ChatMessageSubscription: messageSubscription_ChatMessageSubscription | null;
 }
 
 /* tslint:disable */
