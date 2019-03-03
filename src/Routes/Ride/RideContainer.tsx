@@ -55,6 +55,7 @@ class RideContainer extends React.Component<IProps> {
             {({ data, loading, subscribeToMore }) => {
               const subscribeOptions: IRideSubscribeToMoreOptions = {
                 document: RIDE_SUBSCRIPTION,
+                updateQuery: this.handleSubscriptionUpdate,
               };
 
               subscribeToMore(subscribeOptions);
@@ -83,7 +84,17 @@ class RideContainer extends React.Component<IProps> {
       return prev;
     }
 
-    console.log(prev, subscriptionData);
+    // const { history } = this.props;
+    const {
+      data: {
+        RideStatusSubscription: { status },
+      },
+    } = subscriptionData;
+
+    if (status === "FINISHED") {
+      // history.push("/");
+      window.location.href = "/";
+    }
   };
 }
 
