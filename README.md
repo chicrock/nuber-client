@@ -90,8 +90,8 @@ yarn add dotenv
 ### Logged In
 
     - [x] Home
-    - [ ] Ride
-    - [ ] Chat
+    - [x] Ride
+    - [x] Chat
     - [x] Edit Account
     - [x] Settings
     - [x] Saved Places
