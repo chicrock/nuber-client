@@ -1,5 +1,6 @@
 export default {
   addPlace: "/add-place",
+  chat: "/chat",
   editAccount: "/edit-account",
   findAddress: "/find-address",
   home: "/",

@@ -1,0 +1,17 @@
+import React from "react";
+import { RouteComponentProps } from "react-router";
+import ChatPresenter from "./ChatPresenter";
+
+interface IProps extends RouteComponentProps<any> {}
+
+class ChatContainer extends React.Component<IProps> {
+  constructor(props: IProps) {
+    super(props);
+  }
+
+  public render() {
+    return <ChatPresenter />;
+  }
+}
+
+export default ChatContainer;

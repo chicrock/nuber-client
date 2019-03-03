@@ -10,7 +10,7 @@ const Container = styled.div`
 
 const Title = styled.h4`
   font-weight: 800;
-  margin-top: 30px;
+  margin-top: 25px;
   margin-bottom: 10px;
   &:first-child {
     margin-top: 0;
@@ -31,15 +31,15 @@ const Img = styled.img`
 const Passenger = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `;
 
 const Buttons = styled.div`
-  margin: 30px 0px;
+  margin: 10px 0px;
 `;
 
 const ExtendedButton = styled(Button)`
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 `;
 
 interface IProps {
@@ -115,12 +115,11 @@ const RidePresenter: React.SFC<IProps> = ({
                   }
                 />
               )}
-            {(ride.driver && ride.driver.id === user.id) ||
-              (ride.passenger.id === user.id && ride.status !== "REQUESTING" && (
-                <Link to={`/chat/${ride.chatId}`}>
-                  <ExtendedButton value={"Chat"} onClick={null} />
-                </Link>
-              ))}
+            {ride.status !== "REQUESTING" && (
+              <Link to={`/chat/${ride.chatId}`}>
+                <ExtendedButton value={"Chat"} onClick={null} />
+              </Link>
+            )}
           </Buttons>
         </React.Fragment>
       )}
