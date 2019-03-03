@@ -1,19 +1,31 @@
 import React from "react";
-import { Query } from "react-apollo";
+import { Mutation, MutationFn, Query } from "react-apollo";
 import { RouteComponentProps } from "react-router";
 import { USER_PROFILE } from "src/sharedQueries";
-import { getChat, getChatVariables, userProfile } from "src/types/api";
+import {
+  getChat,
+  getChatVariables,
+  sendMessage,
+  sendMessageVariables,
+  userProfile,
+} from "src/types/api";
 import ChatPresenter from "./ChatPresenter";
-import { GET_CHAT } from "./ChatQuries";
+import { GET_CHAT, SEND_MESSAGE } from "./ChatQuries";
 
 interface IProps extends RouteComponentProps<any> {
   chatId: number;
 }
+interface IState {
+  message: "";
+}
 
 class ProfileQuery extends Query<userProfile> {}
 class ChatQuery extends Query<getChat, getChatVariables> {}
+class SendMessage extends Mutation<sendMessage, sendMessageVariables> {}
 
-class ChatContainer extends React.Component<IProps> {
+class ChatContainer extends React.Component<IProps, IState> {
+  public sendMessageFn: MutationFn;
+
   constructor(props: IProps) {
     super(props);
 
@@ -27,6 +39,10 @@ class ChatContainer extends React.Component<IProps> {
     if (!chatId) {
       history.push("/");
     }
+
+    this.state = {
+      message: "",
+    };
   }
 
   public render() {
@@ -36,6 +52,8 @@ class ChatContainer extends React.Component<IProps> {
       },
     } = this.props;
 
+    const { message } = this.state;
+
     return (
       <ProfileQuery query={USER_PROFILE}>
         {({ data: userData }) => (
@@ -44,17 +62,60 @@ class ChatContainer extends React.Component<IProps> {
             variables={{ chatId: parseInt(chatId, 10) }}
           >
             {({ data, loading }) => (
-              <ChatPresenter
-                data={data}
-                loading={loading}
-                userData={userData}
-              />
+              <SendMessage mutation={SEND_MESSAGE}>
+                {sendMessageFn => {
+                  this.sendMessageFn = sendMessageFn;
+
+                  return (
+                    <ChatPresenter
+                      data={data}
+                      loading={loading}
+                      userData={userData}
+                      messageText={message}
+                      onInputChange={this.onInputChange}
+                      onSubmit={this.onSubmit}
+                    />
+                  );
+                }}
+              </SendMessage>
             )}
           </ChatQuery>
         )}
       </ProfileQuery>
     );
   }
+
+  public onInputChange: React.ChangeEventHandler<HTMLInputElement> = event => {
+    const {
+      target: { name, value },
+    } = event;
+
+    this.setState({
+      [name]: value,
+    } as any);
+  };
+
+  public onSubmit: React.FormEventHandler<HTMLFormElement> = () => {
+    const { message } = this.state;
+    const {
+      match: {
+        params: { chatId },
+      },
+    } = this.props;
+
+    if (message && message !== "") {
+      this.sendMessageFn({
+        variables: {
+          chatId: parseInt(chatId, 10),
+          text: message,
+        },
+      });
+
+      this.setState({
+        message: "",
+      });
+    }
+  };
 }
 
 export default ChatContainer;

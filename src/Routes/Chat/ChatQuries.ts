@@ -9,9 +9,24 @@ export const GET_CHAT = gql`
         passengerId
         driverId
         messages {
+          id
           text
           userId
         }
+      }
+    }
+  }
+`;
+
+export const SEND_MESSAGE = gql`
+  mutation sendMessage($chatId: Int!, $text: String!) {
+    SendChatMessage(chatId: $chatId, text: $text) {
+      ok
+      error
+      message {
+        id
+        text
+        userId
       }
     }
   }
