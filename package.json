@@ -30,11 +30,14 @@
   },
   "scripts": {
     "start": "react-scripts-ts start",
+    "prebuild": "rm -rf build",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "precodegen": "apollo schema:download --endpoint=http://localhost:4000/graphql",
-    "codegen": "apollo codegen:generate src/types/api.d.ts --queries='src/**/!(*.local).ts' --addTypename --localSchemaFile schema.json --target typescript --outputFlat"
+    "codegen": "apollo codegen:generate src/types/api.d.ts --queries='src/**/!(*.local).ts' --addTypename --localSchemaFile schema.json --target typescript --outputFlat",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
@@ -49,6 +52,8 @@
     "@types/react-router-dom": "^4.3.1",
     "@types/react-sidebar": "^3.0.0",
     "@types/styled-components": "^4.1.11",
+    "gh-pages": "^2.0.1",
     "typescript": "^3.1.6"
-  }
+  },
+  "homepage": "https://chicrock.github.io/nuber-client"
 }

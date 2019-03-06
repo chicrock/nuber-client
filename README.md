@@ -78,6 +78,18 @@ yarn add dotenv
 - Get the Google Maps Javascript API key from [Google Console](https://console.cloud.google.com/)
 - Need Geocoding API authorization.
 
+### for deploy
+
+```json
+  // Add this configs in package.json
+  "scripts": {
+    ...
+    "deploy": "gh-pages -d dist"
+    ...
+  },
+  "homepage": "https://chicrock.github.io/nuber-client"
+```
+
 ## Screens
 
 ### Logged Out
